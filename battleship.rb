@@ -16,29 +16,31 @@ class ComputerPlayer < Player
 end
 
 class Ship
-  attr_reader :length, :x, :y, :horizontal
+  attr_reader :length, :x, :y, :horizontal, :taken_places
   
   def initialize length
     @length = length
+    @taken_places = []
   end
 
   def place x, y, horizontal
-    @x = x
-    @y = y
+    @x = x unless taken_places.include?([x])
+    @y = y unless taken_places.include?([y])
     @horizontal = horizontal
   end
 
   def covers? x, y
     x_cur, y_cur = @x, @y
-
     @length.times do
       if self.horizontal
         if x_cur == x && y == y_cur 
+          taken_places << [x_cur,y_cur]
           return true
         end   
         x_cur += 1 
       else
         if x_cur == x && y == y_cur 
+          taken_places << [x_cur,y_cur]
           return true
         end
         y_cur += 1
