@@ -1,4 +1,5 @@
 require 'pry'
+require 'matrix'
 class Player
    attr_accessor :name
 end
@@ -16,64 +17,41 @@ class ComputerPlayer < Player
 end
 
 class Ship
-  attr_accessor :length, :x, :y, :horizontal, :taken_places, :count
-  
+  attr_reader :length
+
   def initialize length
     @length = length
-    @taken_places = []
-    @count = 0
   end
 
-  def place x, y, horizontal
-    @horizontal = horizontal
-    @count += 1
-    return false if taken_places.include?([x,y]) || count > 1
-    @x = x 
-    @y = y
-    
+  def self.generate_cooridinates current, length, axis
+    cooridinates = []
+    if axis
+      delta = Vector[1, 0]
+    else
+      delta = Vector[0, 1]
+    end
+    length.times do
+        cooridinates << current
+        current += delta
+    end
+    cooridinates
+  end
+
+  def place x,y,axis
+    return false if @origin
+    @origin = Vector[x, y]
+    @axis = axis
+    @cooridinates = Ship.generate_cooridinates(@origin, @length, @axis)
   end
 
   def covers? x, y
-    x_cur, y_cur = @x, @y
-    @length.times do
-      if self.horizontal
-        if x_cur == x && y == y_cur
-          taken_places << [x_cur,y_cur]
-          return true
-        end
-        x_cur += 1 
-      else
-        if x_cur == x && y == y_cur 
-          taken_places << [x_cur,y_cur]
-          return true
-        end
-        y_cur += 1
-      end
-    end
-    false
+    @cooridinates.include?(Vector[x,y]) ? true : false
   end
 
-  def overlaps_with? ship2
-   return true if self.covers?(ship2.x,ship2.y)
-   return false
-  end
-
-  def fire_at x, y
-    return true if self.x == x && self.y == y
-    return false
-  end
-
-  def sunk?
+  def overlaps_with? ship
     
   end
 
-
-
-
-
-
-
-
-  
 end
+
 
