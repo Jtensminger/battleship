@@ -58,6 +58,22 @@ class Ship
    return false
   end
 
+  def fire_at x, y
+    return true if self.x == x && self.y == y
+    return false
+  end
 
+  def sunk?
+    
+  end
+
+
+
+
+
+
+
+
+  
 end
 
